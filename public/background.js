@@ -19,11 +19,11 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     chrome.storage.local.get(["time"], (res) => {
         console.log("get in BG.js, res=", res);
         chrome.storage.local.set({"time": res.time - 1}, () => {
-            chrome.action.setBadgeText({
-                text: `${Math.floor(res.time / 60)}:${
-                    res.time % 60
-                }`,
-            });
+            // chrome.action.setBadgeText({
+            //     text: `${Math.floor(res.time / 60)}:${
+            //         res.time % 60
+            //     }`,
+            // });
         });
     });
 });
