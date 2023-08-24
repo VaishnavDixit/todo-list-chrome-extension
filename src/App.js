@@ -212,7 +212,7 @@ function App() {
                     />
                     <button
                         type="button"
-                        className="btn btn-sm btn-danger mb-3 mx-auto d-block"
+                        className="btn btn-sm btn-danger mt-3 mx-auto d-block"
                         onClick={stop}
                     >
                         <FontAwesomeIcon icon={faStop} /> Stop
