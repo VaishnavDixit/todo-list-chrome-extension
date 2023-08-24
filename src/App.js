@@ -138,11 +138,11 @@ function App() {
     console.log("popup End");
 
     return (
-        <div className="App">
-            <p className="text-center timerHeading">Timer</p>
+        <div className="App p-2" style={{width: "200px"}}>
+            <p className="text-center h4">Timer</p>
             {displayMode != "started" ? (
                 <>
-                    <div className="d-flex justify-content-center mb-3">
+                    <div className="d-flex justify-content-center mb-2">
                         {/* <input
                             className="radioBtn"
                             type="radio"
@@ -212,7 +212,7 @@ function App() {
                     />
                     <button
                         type="button"
-                        className="btn btn-sm btn-danger mt-3 mx-auto d-block"
+                        className="btn btn-sm btn-danger mt-2 mx-auto d-block"
                         onClick={stop}
                     >
                         <FontAwesomeIcon icon={faStop} /> Stop
