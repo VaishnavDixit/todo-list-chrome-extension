@@ -1,14 +1,17 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
 * {
-    outline: 1px solid lightgrey;
+    // outline: 1px solid lightgrey;
 }
 .App {
     // background: rgb(25, 31, 32);
-    width: 350px;
+    width: 200px;
     padding: 8px;
     .timerHeading {
-        font-size: 20px;
+        font-size: 24px;
         font-weight: 500;
     }
+	.label{
+		margin-bottom: 10px;
+	}
 }
