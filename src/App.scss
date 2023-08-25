@@ -3,3 +3,12 @@
 * {
     // outline: 1px solid lightgrey;
 }
+
+.App {
+    .progress {
+        height: 20px;
+        .progress-bar {
+            transition: 0.3s ease;
+        }
+    }
+}
