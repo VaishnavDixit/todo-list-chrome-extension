@@ -26,7 +26,7 @@ function App() {
                 setInitialTime(res.timePresets.time);
             }
         );
-        chrome.storage.onChanged.addListener((changes, namespace) => {
+        chrome.storage.onChanged.addListener((changes) => {
             setTime(changes.time.newValue);
             if (changes.mode) setDisplayMode(changes.mode.newValue);
             if (changes.timePresets)
@@ -41,10 +41,14 @@ function App() {
             },
             () => {
                 chrome.action.setBadgeText({
-                    text:
-                        initialTime < 60
-                            ? `${initialTime % 60}s`
-                            : `${Math.ceil(initialTime / 60)}m`,
+                    text: `${
+                        time >= 3600
+                            ? String(Math.floor(time / 3600)) + "h"
+                            : time >= 60
+                            ? String(Math.floor((time % 3600) / 60)) +
+                              "m"
+                            : String(time % 60) + "s"
+                    }`,
                 });
                 chrome.storage.local.set(
                     {
@@ -65,6 +69,9 @@ function App() {
             chrome.storage.local.set({
                 "mode": "stopped",
                 "time": initialTime,
+            });
+            chrome.action.setBadgeText({
+                text: "",
             });
         });
     };
@@ -144,11 +151,18 @@ function App() {
             ) : (
                 <>
                     <p className="text-center mb-0">
-                        {time < 60
-                            ? `${time % 60}s`
-                            : `${Math.floor(time / 60)}m ${
-                                  time % 60
-                              }s`}
+                        {`${
+                            time >= 3600
+                                ? String(Math.floor(time / 3600)) +
+                                  "h"
+                                : ""
+                        } ${
+                            time > 60
+                                ? String(
+                                      Math.floor((time % 3600) / 60)
+                                  ) + "m"
+                                : ""
+                        } ${time % 60}s`}
                     </p>
                     <ProgressBar
                         striped

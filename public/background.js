@@ -7,22 +7,20 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.windows.onRemoved.addListener(() => {
-    chrome.storage.local.get(
-        ["time", "timePresets"],
-        (res) => {
-            chrome.alarms.clear("alarm", () => {
-                chrome.storage.local.set(
-                    {
-                        "mode": "stopped",
-                        "time": res.timePresets,
-                    }
-                );
+    chrome.storage.local.get(["time", "timePresets"], (res) => {
+        chrome.alarms.clear("alarm", () => {
+            chrome.storage.local.set({
+                "mode": "stopped",
+                "time": res.timePresets,
             });
-        }
-    );
+        });
+        chrome.action.setBadgeText({
+            text: "",
+        });
+    });
 });
 
-chrome.alarms.onAlarm.addListener((alarm) => {
+chrome.alarms.onAlarm.addListener(() => {
     chrome.storage.local.get(["time", "timePresets"], (res) => {
         if (res.time == 1) {
             chrome.alarms.clear("alarm", () => {
@@ -37,10 +35,14 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         } else {
             chrome.storage.local.set({"time": res.time - 1}, () => {
                 chrome.action.setBadgeText({
-                    text:
-                        res.time - 1 < 60
-                            ? `${(res.time - 1) % 60}s`
-                            : `${Math.ceil((res.time - 1) / 60)}m`,
+                    text: `${
+                        (res.time - 1) >= 3600
+                            ? String(Math.floor((res.time - 1) / 3600)) + "h"
+                            : (res.time - 1) >= 60
+                            ? String(Math.floor(((res.time - 1) % 3600) / 60)) +
+                              "m"
+                            : String((res.time - 1) % 60) + "s"
+                    }`,
                 });
             });
         }
