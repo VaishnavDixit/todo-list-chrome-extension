@@ -1,6 +1,19 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 
+@import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 .App {
+    * {
+        font-family: "Quicksand", sans-serif;
+    }
+    input {
+        width: 40%;
+        border-radius: 0.25rem;
+        border-style: solid;
+    }
+    .timeDisplay {
+        font-weight: 600;
+        font-size: 18px;
+    }
     .progress {
         height: 20px;
         .progress-bar {

@@ -1,6 +1,14 @@
 {
-    "name": "Create React App Sample",
+    "name": "Simple Timer",
+    "icons": {
+        "128": "timerImage128.png"
+    },
+    "author": "vaishnavdixit98@gmail.com",
+    "description": "Whether it's for work, study, or rejuvenating breaks, the Simple Timer provides a simple and intuitive way to allocate your time wisely.",
     "action": {
+        "default_icon": {
+            "48": "timerLogo48.png"
+        },
         "default_popup": "index.html"
     },
     "permissions": ["storage", "alarms"],

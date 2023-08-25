@@ -2,14 +2,15 @@
 /*global local*/
 
 import {
-    faCheck,
-    faPlay,
-    faStop,
+	faCheck,
+	faEdit,
+	faPlay,
+	faStop,
 } from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {useEffect, useState} from "react";
-import {ProgressBar} from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { ProgressBar } from "react-bootstrap";
 import "./App.scss";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
     const [initialTime, setInitialTime] = useState(0);
     const [displayMode, setDisplayMode] = useState("stopped");
     const [isEditing, setIsEditing] = useState(false);
+    const [timeDraft, setTimeDraft] = useState(-1);
     useEffect(() => {
         chrome.storage.local.get(
             ["mode", "time", "timePresets"],
@@ -27,12 +29,13 @@ function App() {
             }
         );
         chrome.storage.onChanged.addListener((changes) => {
-            setTime(changes.time.newValue);
+            if (changes.time) setTime(changes.time.newValue);
             if (changes.mode) setDisplayMode(changes.mode.newValue);
             if (changes.timePresets)
                 setInitialTime(changes.timePresets.newValue.time);
         });
     }, []);
+
     const start = () => {
         chrome.alarms.create(
             "alarm",
@@ -40,24 +43,37 @@ function App() {
                 periodInMinutes: 1.0 / 60,
             },
             () => {
-                chrome.action.setBadgeText({
-                    text: `${
-                        time >= 3600
-                            ? String(Math.floor(time / 3600)) + "h"
-                            : time >= 60
-                            ? String(Math.floor((time % 3600) / 60)) +
-                              "m"
-                            : String(time % 60) + "s"
-                    }`,
-                });
+                const finalisedTime =
+                    timeDraft === -1 ? initialTime : timeDraft;
                 chrome.storage.local.set(
                     {
                         "mode": "started",
-                        "time": initialTime,
+                        "time": finalisedTime,
+                        "timePresets": {
+                            "time": finalisedTime,
+                        },
                     },
                     () => {
                         setDisplayMode("started");
                         setIsEditing(false);
+                        chrome.action.setBadgeText({
+                            text: `${
+                                finalisedTime >= 3600
+                                    ? String(
+                                          Math.floor(
+                                              finalisedTime / 3600
+                                          )
+                                      ) + "h"
+                                    : finalisedTime >= 60
+                                    ? String(
+                                          Math.floor(
+                                              (finalisedTime % 3600) /
+                                                  60
+                                          )
+                                      ) + "m"
+                                    : String(finalisedTime % 60) + "s"
+                            }`,
+                        });
                     }
                 );
             }
@@ -81,21 +97,19 @@ function App() {
     };
 
     const doneClickHandler = () => {
+        setInitialTime(timeDraft === -1 ? initialTime : timeDraft);
         setIsEditing(false);
     };
 
     const inputOnChangeListener = (value) => {
-        if (value > 0 && value < 200) {
-            chrome.storage.local.set({
-                "time": value * 60,
-                "timePresets": {"time": value * 60},
-            });
-        }
+        if (value <= 0 || value >= 1000) {
+            setTimeDraft(-1);
+        } else setTimeDraft(value * 60);
     };
 
     return (
         <div className="App p-2" style={{width: "200px"}}>
-            <p className="text-center h4">Timer</p>
+            <p className="text-center heading h4">Timer</p>
             {displayMode != "started" ? (
                 <>
                     <div className="d-flex justify-content-center mb-2">
@@ -103,17 +117,15 @@ function App() {
                             <input
                                 type="number"
                                 min={0}
-                                max={120}
                                 defaultValue={initialTime / 60}
-                                style={{textAlign: "center"}}
                                 onChange={({target: {value}}) =>
                                     inputOnChangeListener(value)
                                 }
                             />
                         ) : (
-                            <label for="html">
+                            <div className="timeDisplay">
                                 {initialTime / 60} min
-                            </label>
+                            </div>
                         )}
                     </div>
                     <div className="d-flex justify-content-center">
@@ -142,6 +154,7 @@ function App() {
                                     className="btn btn-sm btn-warning"
                                     onClick={editClickHandler}
                                 >
+                                    <FontAwesomeIcon icon={faEdit} />{" "}
                                     Edit
                                 </button>
                             </>
@@ -150,14 +163,14 @@ function App() {
                 </>
             ) : (
                 <>
-                    <p className="text-center mb-0">
+                    <p className="text-center mb-0 timeDisplay">
                         {`${
                             time >= 3600
                                 ? String(Math.floor(time / 3600)) +
                                   "h"
                                 : ""
                         } ${
-                            time > 60
+                            time >= 60
                                 ? String(
                                       Math.floor((time % 3600) / 60)
                                   ) + "m"
@@ -168,13 +181,6 @@ function App() {
                         striped
                         animated
                         now={((time / initialTime) * 100).toFixed(2)}
-                        // label={
-                        //     time < 60
-                        //         ? `${time % 60}s`
-                        //         : `${Math.floor(time / 60)}m ${
-                        //               time % 60
-                        //           }s`
-                        // }
                     />
                     <button
                         type="button"
@@ -185,17 +191,14 @@ function App() {
                     </button>
                 </>
             )}
-            {/* <p className="mt-2 mb-0">time: {time}</p>
-            <p className="mb-0">initialTime: {initialTime}</p>
+            {/* <p className="mb-0">timeDraft: {timeDraft}</p>
+            <p className="mt-2 mb-0">time: {time}</p>
             <p className="mb-0">displayMode: {displayMode}</p>
             <p className="mb-0">isEditing: {isEditing}</p>
-            <p className="mb-0">toChangeTime: {toChangeTime}</p>
+            <p className="mb-0">initialTime: {initialTime}</p>
             <p className="mb-0">
                 ProgressBar percentage:{" "}
                 {((time / initialTime) * 100).toFixed(2)}
-            </p>
-            <p style={{whiteSpace: "pre-wrap"}}>
-                allStorage: {JSON.stringify(allStorage)}
             </p> */}
         </div>
     );
