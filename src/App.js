@@ -1,205 +1,94 @@
 /*global chrome*/
 /*global local*/
 
-import {
-	faCheck,
-	faEdit,
-	faPlay,
-	faStop,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect, useState } from "react";
-import { ProgressBar } from "react-bootstrap";
+import {useEffect, useState} from "react";
 import "./App.scss";
-
+import {Button, Col, Row} from "react-bootstrap";
+import {faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 function App() {
-    const [time, setTime] = useState();
-    const [initialTime, setInitialTime] = useState(0);
-    const [displayMode, setDisplayMode] = useState("stopped");
-    const [isEditing, setIsEditing] = useState(false);
-    const [timeDraft, setTimeDraft] = useState(-1);
+    const {v4: uuidv4} = require("uuid");
+    const [tasks, setTasks] = useState([]);
     useEffect(() => {
-        chrome.storage.local.get(
-            ["mode", "time", "timePresets"],
-            (res) => {
-                setDisplayMode(res.mode);
-                setTime(res.time || 0);
-                setInitialTime(res.timePresets.time);
-            }
-        );
-        chrome.storage.onChanged.addListener((changes) => {
-            if (changes.time) setTime(changes.time.newValue);
-            if (changes.mode) setDisplayMode(changes.mode.newValue);
-            if (changes.timePresets)
-                setInitialTime(changes.timePresets.newValue.time);
+        chrome.storage.local.get(["tasks"], (res) => {
+            setTasks(res.tasks || []);
         });
     }, []);
 
-    const start = () => {
-        chrome.alarms.create(
-            "alarm",
-            {
-                periodInMinutes: 1.0 / 60,
-            },
-            () => {
-                const finalisedTime =
-                    timeDraft === -1 ? initialTime : timeDraft;
-                chrome.storage.local.set(
-                    {
-                        "mode": "started",
-                        "time": finalisedTime,
-                        "timePresets": {
-                            "time": finalisedTime,
-                        },
-                    },
-                    () => {
-                        setDisplayMode("started");
-                        setIsEditing(false);
-                        chrome.action.setBadgeText({
-                            text: `${
-                                finalisedTime >= 3600
-                                    ? String(
-                                          Math.floor(
-                                              finalisedTime / 3600
-                                          )
-                                      ) + "h"
-                                    : finalisedTime >= 60
-                                    ? String(
-                                          Math.floor(
-                                              (finalisedTime % 3600) /
-                                                  60
-                                          )
-                                      ) + "m"
-                                    : String(finalisedTime % 60) + "s"
-                            }`,
-                        });
-                    }
-                );
-            }
-        );
-    };
-
-    const stop = () => {
-        chrome.alarms.clear("alarm", () => {
-            chrome.storage.local.set({
-                "mode": "stopped",
-                "time": initialTime,
-            });
-            chrome.action.setBadgeText({
-                text: "",
-            });
+    const addClickHandler = () => {
+        const value = document
+            .getElementsByTagName("input")[0]
+            .value.trim();
+        if (!value) return;
+        document.getElementsByTagName("input")[0].value = "";
+        const newUuid = uuidv4();
+        setTasks([...tasks, {task: value, uuid: newUuid}]);
+        chrome.storage.local.set({
+            tasks: [...tasks, {task: value, uuid: newUuid}],
         });
     };
 
-    const editClickHandler = () => {
-        setIsEditing(true);
-    };
-
-    const doneClickHandler = () => {
-        setInitialTime(timeDraft === -1 ? initialTime : timeDraft);
-        setIsEditing(false);
-    };
-
-    const inputOnChangeListener = (value) => {
-        if (value <= 0 || value >= 1000) {
-            setTimeDraft(-1);
-        } else setTimeDraft(value * 60);
+    const deleteClickHandler = (uuid) => {
+        setTasks((prev) => [
+            ...prev.filter((item) => item.uuid !== uuid),
+        ]);
+        chrome.storage.local.set({
+            tasks: [...tasks.filter((item) => item.uuid !== uuid)],
+        });
     };
 
     return (
-        <div className="App p-2" style={{width: "200px"}}>
-            <p className="text-center heading h4">Timer</p>
-            {displayMode != "started" ? (
-                <>
-                    <div className="d-flex justify-content-center mb-2">
-                        {isEditing ? (
-                            <input
-                                type="number"
-                                min={0}
-                                defaultValue={initialTime / 60}
-                                onChange={({target: {value}}) =>
-                                    inputOnChangeListener(value)
-                                }
-                            />
-                        ) : (
-                            <div className="timeDisplay">
-                                {initialTime / 60} min
-                            </div>
-                        )}
-                    </div>
-                    <div className="d-flex justify-content-center">
-                        <button
-                            type="button"
-                            className="btn btn-sm btn-success me-2"
-                            onClick={start}
-                        >
-                            <FontAwesomeIcon icon={faPlay} /> Start
-                        </button>
-                        {isEditing ? (
-                            <>
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-outline-primary"
-                                    onClick={doneClickHandler}
-                                >
-                                    <FontAwesomeIcon icon={faCheck} />{" "}
-                                    Done
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-warning"
-                                    onClick={editClickHandler}
-                                >
-                                    <FontAwesomeIcon icon={faEdit} />{" "}
-                                    Edit
-                                </button>
-                            </>
-                        )}
-                    </div>
-                </>
-            ) : (
-                <>
-                    <p className="text-center mb-0 timeDisplay">
-                        {`${
-                            time >= 3600
-                                ? String(Math.floor(time / 3600)) +
-                                  "h"
-                                : ""
-                        } ${
-                            time >= 60
-                                ? String(
-                                      Math.floor((time % 3600) / 60)
-                                  ) + "m"
-                                : ""
-                        } ${time % 60}s`}
-                    </p>
-                    <ProgressBar
-                        striped
-                        animated
-                        now={((time / initialTime) * 100).toFixed(2)}
-                    />
-                    <button
-                        type="button"
-                        className="btn btn-sm btn-danger mt-2 mx-auto d-block"
-                        onClick={stop}
+        <div className="App p-2" style={{width: "350px"}}>
+            <Row className="mb-2">
+                <Col xs={12}>
+                    <h4 className="text-center">My Todo list</h4>
+                </Col>
+                <Col xs={9} className="pe-0">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Start typing..."
+                    ></input>
+                </Col>
+                <Col xs={3}>
+                    <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={addClickHandler}
                     >
-                        <FontAwesomeIcon icon={faStop} /> Stop
-                    </button>
-                </>
-            )}
-            {/* <p className="mb-0">timeDraft: {timeDraft}</p>
-            <p className="mt-2 mb-0">time: {time}</p>
-            <p className="mb-0">displayMode: {displayMode}</p>
-            <p className="mb-0">isEditing: {isEditing}</p>
-            <p className="mb-0">initialTime: {initialTime}</p>
-            <p className="mb-0">
-                ProgressBar percentage:{" "}
-                {((time / initialTime) * 100).toFixed(2)}
-            </p> */}
+                        <FontAwesomeIcon
+                            icon={faPlus}
+                            className="me-1"
+                        />
+                        Add
+                    </Button>
+                </Col>
+            </Row>
+            <Row className="tasksListRow">
+                {tasks.length ? (
+                    tasks?.map((val) => (
+                        <Row className=" py-1 d-flex justify-content-between taskRow">
+                            <Col xs={10}>{val.task}</Col>
+                            <Col xs={2}>
+                                <Button
+                                    size="sm"
+                                    variant="outline-danger"
+                                    onClick={() =>
+                                        deleteClickHandler(val.uuid)
+                                    }
+                                >
+                                    <FontAwesomeIcon icon={faTrash} />
+                                </Button>
+                            </Col>
+                        </Row>
+                    ))
+                ) : (
+                    <p className="text-center mb-0">
+                        Write your tasks above...
+                    </p>
+                )}
+            </Row>
         </div>
     );
 }

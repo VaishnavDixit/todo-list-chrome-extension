@@ -5,19 +5,45 @@
     * {
         font-family: "Quicksand", sans-serif;
     }
+    h4 {
+        font-weight: 600;
+    }
     input {
-        width: 40%;
         border-radius: 0.25rem;
         border-style: solid;
     }
-    .timeDisplay {
-        font-weight: 600;
-        font-size: 18px;
+    Button {
+        height: 30px;
+        width: 100%;
     }
-    .progress {
-        height: 20px;
-        .progress-bar {
-            transition: 0.3s ease;
+    .taskRow {
+        &:hover {
+            background: #55c4ff3e;
         }
+        transition: 0.3s ease;
     }
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #6f6f6f;
+}
+
+* {
+    // outline: 1px solid lightgrey;
 }
