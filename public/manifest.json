@@ -1,13 +1,15 @@
 {
-    "name": "Simple Timer",
+    "name": "Simple Todo list",
     "icons": {
-        "128": "timerImage128.png"
+        "128": "todoIcon128Full.jpg"
     },
     "author": "vaishnavdixit98@gmail.com",
-    "description": "Simple Timer provides a simple and intuitive way to allocate your time wisely.",
+    "description": "A simple todo list with a minimalistic UI that lets you keep track of your pending tasks.",
     "action": {
         "default_icon": {
-            "48": "timerLogo48.png"
+            "128": "todoIcon128.png",
+            "48": "todoIcon48.png",
+            "24": "todoIcon24.png"
         },
         "default_popup": "index.html"
     },

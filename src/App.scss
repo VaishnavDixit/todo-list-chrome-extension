@@ -21,7 +21,14 @@
             background: #55c4ff3e;
         }
         transition: 0.3s ease;
+		width: 100%;
+		margin: 0;
     }
+	.tasksListRow{
+		max-height: 300px;
+		width: 100%;
+		overflow: auto;
+	}
 }
 
 ::-webkit-scrollbar {
@@ -44,6 +51,6 @@
     background: #6f6f6f;
 }
 
-* {
-    // outline: 1px solid lightgrey;
-}
+// * {
+//     // outline: 1px solid lightgrey;
+// }
