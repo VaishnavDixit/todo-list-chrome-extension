@@ -1,34 +1,55 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
-
 @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
+
 .App {
     * {
         font-family: "Quicksand", sans-serif;
     }
+
     h4 {
         font-weight: 600;
     }
+
     input {
         border-radius: 0.25rem;
         border-style: solid;
     }
+
     Button {
         height: 30px;
         width: 100%;
     }
+
+    .dropdown {
+        width: 30px;
+        button {
+            padding: 0;
+        }
+        .dropdown-toggle {
+            border-radius: 4px;
+            &::after {
+                display: none;
+            }
+        }
+    }
+
     .taskRow {
+        transition: 0.3s ease;
+        width: 100%;
+        margin: 0;
+        .task {
+            font-size: 15px;
+        }
         &:hover {
             background: #55c4ff3e;
         }
-        transition: 0.3s ease;
-		width: 100%;
-		margin: 0;
     }
-	.tasksListRow{
-		max-height: 300px;
-		width: 100%;
-		overflow: auto;
-	}
+
+    .tasksListRow {
+        max-height: 300px;
+        width: 100%;
+        overflow: auto;
+    }
 }
 
 ::-webkit-scrollbar {
@@ -52,5 +73,5 @@
 }
 
 // * {
-//     // outline: 1px solid lightgrey;
+//     outline: 1px solid lightgrey;
 // }
