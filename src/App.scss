@@ -21,7 +21,7 @@
     }
 
     .dropdown {
-        width: 30px;
+        width: 100%;
         button {
             padding: 0;
         }
@@ -46,9 +46,17 @@
     }
 
     .tasksListRow {
-        max-height: 267px;
         width: 100%;
         overflow: auto;
+        textarea {
+			width: 100%;
+            border: none;
+            resize: none;
+        }
+        textarea:focus {
+            border: none;
+            outline-width: 0;
+        }
     }
 }
 
