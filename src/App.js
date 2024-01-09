@@ -9,18 +9,24 @@ import {
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {useEffect, useState} from "react";
-import {Button, Col, Row} from "react-bootstrap";
+import {
+    Button,
+    Col,
+    NavItem,
+    Row,
+} from "react-bootstrap";
 import "./App.scss";
+import Index from "./components/task/Index";
 function App() {
     const {v4: uuidv4} = require("uuid");
-    const [tasks, setTasks] = useState([]);
-	const list = new Map();
-	list["1"]=["11","12","13"];
-	list["2"]=["21","22","23","24"];
-	list["3"]=["31","33"];
-	list["12"]=["121","122"];
+    const [tasks, setTasks] = useState({});
+    // const list = new Map();
+    // list["1"]=["11","12","13"];
+    // list["2"]=["21","22","23","24"];
+    // list["3"]=["31","33"];
+    // list["12"]=["121","122"];
 
-	useEffect(() => {
+    useEffect(() => {
         // chrome.storage.sync.get(
         //     ["tasks"],
         //     (res) => {
@@ -29,20 +35,21 @@ function App() {
         // );
     }, []);
 
-    const addClickHandler = () => {
+    const addClickHandler = (parentUuid) => {
         const value = document
             .getElementsByTagName("input")[0]
             .value.trim();
+
         if (!value) return;
         document.getElementsByTagName(
             "input"
         )[0].value = "";
+
         const newUuid = uuidv4();
-        const newTasksList = [
-            {task: value, uuid: newUuid},
-            ...tasks,
-        ];
-        setTasks(newTasksList);
+        const newTasksList = tasks;
+        newTasksList[newUuid] = value;
+        console.log(newTasksList);
+        setTasks({...newTasksList});
         // chrome.storage.sync.set({
         //     tasks: newTasksList,
         // });
@@ -98,26 +105,55 @@ function App() {
                 </Col>
             </Row>
             <Row className="tasksListRow mx-0">
-                <Col
-                    xs={1}
-                    className="pe-0 d-flex align-items-center justify-content-center"
-                >
-                    <FontAwesomeIcon
-                        icon={faChevronRight}
-                        className="me-1"
-                    />
-                </Col>
-                <Col
-                    xs={11}
-                    className="px-0 ps-1 task"
-                >
-                    <textarea
-                        type="text"
-                        id="fname"
-						rows={1}
-                    />
-                </Col>
+                {Object.entries(tasks).map(
+                    (task) => (
+                        <>
+                            {task[1]}
+                            <br />
+                            <div className="ps-1">
+                                <Index
+                                    task={task}
+                                    tasks={tasks}
+                                />
+                                <Row className="pe-2 mb-1">
+                                    <Col
+                                        xs={8}
+                                        className="pe-0"
+                                    >
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Start typing..."
+                                        ></input>
+                                    </Col>
+                                    <Col
+                                        xs={3}
+                                        className="d-flex justify-content-end"
+                                    >
+                                        <Button
+                                            variant="primary"
+                                            size="sm"
+                                            onClick={
+                                                addClickHandler
+                                            }
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={
+                                                    faPlus
+                                                }
+                                                className="me-1"
+                                            />
+                                            Add
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </>
+                    )
+                )}
+                <input></input>
             </Row>
+            {JSON.stringify(tasks)}
         </div>
     );
 }
