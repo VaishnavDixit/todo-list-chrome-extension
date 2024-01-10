@@ -19,7 +19,10 @@ import "./App.scss";
 import Index from "./components/task/Index";
 function App() {
     const {v4: uuidv4} = require("uuid");
-    const [tasks, setTasks] = useState({});
+    const [tree, setTree] = useState({
+        "start": [],
+    });
+    const [textIn, setTextIn] = useState({});
     // const list = new Map();
     // list["1"]=["11","12","13"];
     // list["2"]=["21","22","23","24"];
@@ -35,21 +38,27 @@ function App() {
         // );
     }, []);
 
-    const addClickHandler = (parentUuid) => {
-        const value = document
-            .getElementsByTagName("input")[0]
-            .value.trim();
+    const addClickHandler = (
+        parentUuid,
+        text
+    ) => {
+        // const text = document
+        //     .getElementsByTagName("input")[0]
+        //     .value.trim();
 
-        if (!value) return;
-        document.getElementsByTagName(
-            "input"
-        )[0].value = "";
+        if (!text) return;
+        // document.getElementsByTagName(
+        //     "input"
+        // )[0].value = "";
 
         const newUuid = uuidv4();
-        const newTasksList = tasks;
-        newTasksList[newUuid] = value;
-        console.log(newTasksList);
-        setTasks({...newTasksList});
+        const newTreeTemp = tree;
+        const textInTemp = textIn;
+        textInTemp[newUuid] = text;
+        newTreeTemp[parentUuid].push(newUuid);
+        newTreeTemp[newUuid] = [];
+        setTextIn(textInTemp);
+        setTree({...newTreeTemp});
         // chrome.storage.sync.set({
         //     tasks: newTasksList,
         // });
@@ -57,11 +66,11 @@ function App() {
 
     const deleteClickHandler = (uuid) => {
         const temp = [
-            ...tasks.filter(
+            ...tree.filter(
                 (item) => item.uuid !== uuid
             ),
         ];
-        setTasks(temp);
+        setTree(temp);
         // chrome.storage.sync.set({
         //     tasks: temp,
         // });
@@ -70,7 +79,7 @@ function App() {
     return (
         <div
             className="App p-2 pe-0 pb-0"
-            style={{width: "600px"}}
+            style={{width: "1400px"}}
         >
             <Row className="mb-1 d-flex justify-content-between px-2">
                 <Col xs={6} className="ps-1">
@@ -79,7 +88,7 @@ function App() {
                     </h4>
                 </Col>
             </Row>
-            <Row className="pe-2 mb-1">
+            {/* <Row className="pe-2 mb-1">
                 <Col xs={8} className="pe-0">
                     <input
                         type="text"
@@ -94,7 +103,16 @@ function App() {
                     <Button
                         variant="primary"
                         size="sm"
-                        onClick={addClickHandler}
+                        onClick={(e) =>
+                            addClickHandler(
+                                "start",
+                                document
+                                    .getElementsByTagName(
+                                        "input"
+                                    )[0]
+                                    .value.trim()
+                            )
+                        }
                     >
                         <FontAwesomeIcon
                             icon={faPlus}
@@ -103,57 +121,86 @@ function App() {
                         Add
                     </Button>
                 </Col>
-            </Row>
-            <Row className="tasksListRow mx-0">
-                {Object.entries(tasks).map(
-                    (task) => (
-                        <>
-                            {task[1]}
-                            <br />
-                            <div className="ps-1">
-                                <Index
-                                    task={task}
-                                    tasks={tasks}
+            </Row> */}
+            <Row className="tasksListRow mx-0 border">
+                {" "}
+                <div className="ps-1">
+                    {tree["start"] &&
+                        tree["start"].map(
+                            (uuid) => (
+                                <>
+                                    <br />
+
+                                    <Index
+                                        uuid={
+                                            uuid
+                                        }
+                                        tree={
+                                            tree
+                                        }
+                                        textIn={
+                                            textIn
+                                        }
+                                        addClickHandler={(
+                                            uuid,
+                                            text
+                                        ) =>
+                                            addClickHandler(
+                                                uuid,
+                                                text
+                                            )
+                                        }
+                                    />
+                                </>
+                            )
+                        )}
+                    <Row className="pe-2 mb-1">
+                        <Col
+                            xs={8}
+                            className="pe-0"
+                        >
+                            <input
+                                type="text"
+                                id="start"
+                                className="form-control"
+                                placeholder="Start typing..."
+                            ></input>
+                        </Col>
+                        <Col
+                            xs={3}
+                            className="d-flex justify-content-end"
+                        >
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                onClick={(e) =>
+                                    addClickHandler(
+                                        "start",
+                                        document
+                                            .getElementById(
+                                                "start"
+                                            )
+                                            .value.trim()
+                                    )
+                                }
+                            >
+                                <FontAwesomeIcon
+                                    icon={faPlus}
+                                    className="me-1"
                                 />
-                                <Row className="pe-2 mb-1">
-                                    <Col
-                                        xs={8}
-                                        className="pe-0"
-                                    >
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Start typing..."
-                                        ></input>
-                                    </Col>
-                                    <Col
-                                        xs={3}
-                                        className="d-flex justify-content-end"
-                                    >
-                                        <Button
-                                            variant="primary"
-                                            size="sm"
-                                            onClick={
-                                                addClickHandler
-                                            }
-                                        >
-                                            <FontAwesomeIcon
-                                                icon={
-                                                    faPlus
-                                                }
-                                                className="me-1"
-                                            />
-                                            Add
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </>
-                    )
-                )}
-                <input></input>
+                                Add out
+                            </Button>
+                        </Col>
+                    </Row>
+                </div>
             </Row>
-            {JSON.stringify(tasks)}
+            <pre>
+                tree:{" "}
+                {JSON.stringify(tree, null, 4)}
+                <br />
+                textIn:{" "}
+                {JSON.stringify(textIn, null, 4)}
+            </pre>
         </div>
     );
 }
