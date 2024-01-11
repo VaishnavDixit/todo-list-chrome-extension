@@ -4,7 +4,7 @@
     // outline: 1px solid lightgrey;
 }
 .App {
-	// border: 1px solid blue;
+    // border: 1px solid blue;
     * {
         font-family: "Quicksand", sans-serif;
     }
@@ -14,8 +14,10 @@
     }
 
     input {
-        border-radius: 0.25rem;
-        border-style: solid;
+        border: none;
+        &:focus {
+            outline: none;
+        }
     }
 
     Button {
@@ -52,7 +54,7 @@
         width: 100%;
         overflow: auto;
         textarea {
-			width: 100%;
+            width: 100%;
             border: none;
             resize: none;
         }
@@ -62,7 +64,29 @@
         }
     }
 }
-
+.subTasksSection {
+    position: relative;
+}
+.subTasksSection::after {
+	content: "";
+    position: absolute;
+    background: red;
+    /* border-left: 1px solid red; */
+    /* border-bottom: 1px solid red; */
+    left: 9px;
+    top: -4px;
+    width: 1px;
+    bottom: -6px;
+}
+.subTasksSection::before {
+	content: "";
+    position: absolute;
+    background: rgb(17, 0, 255);
+    left: 9px;
+    top: 16px;
+    width: 12px;
+    height: 1px;
+}
 ::-webkit-scrollbar {
     width: 4px;
 }
@@ -82,5 +106,3 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #6f6f6f;
 }
-
-
