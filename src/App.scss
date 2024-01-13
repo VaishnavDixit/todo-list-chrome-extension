@@ -13,7 +13,7 @@
         font-weight: 600;
     }
 
-    input {
+    input, textarea {
         border: none;
         &:focus {
             outline: none;
@@ -67,26 +67,17 @@
 .subTasksSection {
     position: relative;
 }
-.subTasksSection::after {
-	content: "";
-    position: absolute;
-    background: red;
-    /* border-left: 1px solid red; */
-    /* border-bottom: 1px solid red; */
-    left: 9px;
-    top: -4px;
-    width: 1px;
-    bottom: -6px;
-}
-.subTasksSection::before {
-	content: "";
-    position: absolute;
-    background: rgb(17, 0, 255);
-    left: 9px;
-    top: 16px;
-    width: 12px;
-    height: 1px;
-}
+
+// .subTasksSection::before {
+// 	content: "";
+//     position: absolute;
+//     background: rgb(17, 0, 255);
+//     left: 9px;
+//     top: 16px;
+//     width: 12px;
+//     height: 1px;
+// }
+
 ::-webkit-scrollbar {
     width: 4px;
 }
