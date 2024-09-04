@@ -1,7 +1,7 @@
 /*global chrome*/
 /*global local*/
 
-import {faCheck, faGripVertical, faPlus, faReorder} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faGripVertical, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Reorder} from "framer-motion";
@@ -10,16 +10,14 @@ import {Button, Col, Row} from "react-bootstrap";
 import {v4 as uuidv4} from "uuid";
 import "./App.scss";
 import "./custom.scss";
-import {faBars} from "@fortawesome/free-solid-svg-icons/faBars";
-import {faGripLines} from "@fortawesome/free-solid-svg-icons/faGripLines";
 
 function App() {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        // chrome.storage.sync.get(["tasks"], (res) => {
-        //     setTasks(res.tasks || []);
-        // });
+        chrome.storage.sync.get(["tasks"], (res) => {
+            setTasks(res.tasks || []);
+        });
     }, []);
 
     const handleAddTask = () => {
@@ -27,21 +25,22 @@ function App() {
         const value = textarea.value.trim();
         if (!value) return;
         textarea.value = "";
+        textarea.focus();
         const newTask = {task: value, uuid: uuidv4()};
         const updatedTasks = [newTask, ...tasks];
         setTasks(updatedTasks);
-        // chrome.storage.sync.set({tasks: updatedTasks});
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
 
     const handleReorder = (newTasksList) => {
         setTasks(newTasksList);
-        // chrome.storage.sync.set({tasks: newTasksList});
+        chrome.storage.sync.set({tasks: newTasksList});
     };
 
     const handleDeleteTask = (uuid) => {
         const updatedTasks = tasks.filter((item) => item.uuid !== uuid);
         setTasks(updatedTasks);
-        // chrome.storage.sync.set({tasks: updatedTasks});
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
 
     return (
