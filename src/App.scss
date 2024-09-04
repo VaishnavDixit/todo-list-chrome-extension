@@ -1,18 +1,58 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 
-.App {
-    * {
-        font-family: "Quicksand", sans-serif;
-    }
+// .dark {
+//     background-color: #2a333a;
+//     h5 {
+//         color: #c9d4d6;
+//     }
+//     textarea {
+//         color: #c9d4d6;
+//     }
 
-    h4 {
+//     Button {
+//     }
+
+//     .fontSmall {
+//         color: #c9d4d6;
+//     }
+
+//     .taskRow {
+//         transition: 0.3s ease;
+//         width: 100%;
+//         margin: 0;
+
+//         .task {
+//             pre {
+//                 white-space: pre-wrap;
+//                 word-wrap: break-word;
+//                 font-size: 16px;
+//                 width: 100%;
+//             }
+//         }
+
+//         &:hover {
+//             background: #c1d3dd3e;
+//         }
+//     }
+
+//     .tasksListRow {
+//         max-height: 267px;
+//         width: 100%;
+//         overflow: auto;
+//     }
+// }
+.App {
+    font-family: "Quicksand", sans-serif;
+    h5 {
         font-weight: 600;
     }
 
-    input {
-        border-radius: 0.25rem;
-        border-style: solid;
+    textarea {
+        background: transparent;
+        &:focus {
+            background: transparent;
+        }
     }
 
     Button {
@@ -20,26 +60,31 @@
         width: 100%;
     }
 
-    .dropdown {
-        width: 30px;
-        button {
-            padding: 0;
-        }
-        .dropdown-toggle {
-            border-radius: 4px;
-            &::after {
-                display: none;
-            }
-        }
+    .fontSmall {
+        font-size: 14px !important;
+    }
+    .fontSmaller {
+        font-size: 12px !important;
     }
 
     .taskRow {
         transition: 0.3s ease;
         width: 100%;
         margin: 0;
-        .task {
-            font-size: 15px;
+        cursor: grab;
+        .reorderIcon {
+            opacity: 0.1;
+            font-size: 14px;
         }
+        .task {
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                font-size: 16px;
+                width: 100%;
+            }
+        }
+
         &:hover {
             background: #55c4ff3e;
         }
@@ -54,24 +99,17 @@
 
 ::-webkit-scrollbar {
     width: 4px;
-}
+    height: 4px;
+    &-track {
+        background: #f1f1f1;
+    }
 
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
+    &-thumb {
+        background: #888;
+        border-radius: 4px;
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
+        &:hover {
+            background: #6f6f6f;
+        }
+    }
 }
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #6f6f6f;
-}
-
-// * {
-//     outline: 1px solid lightgrey;
-// }
