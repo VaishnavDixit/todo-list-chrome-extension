@@ -1,5 +1,25 @@
-// $primary: #186800; // Your custom primary color
-// $secondary: #534caf; // Your custom secondary color
-// $success: #534caf; // Your custom secondary color
+// dark-theme.scss
 
-@import "~bootstrap/scss/bootstrap";
+// Import Bootstrap's core and mixins
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+// Define custom colors for dark theme
+$dark-theme-colors: (
+  "dark-primary": #FFB0FF,
+  "dark-secondary": #2a2a2a,
+  "dark-success": #0a0a0a,
+  "dark-danger": #5a1a1a,
+  // Add more custom dark variants as needed
+);
+
+// Merge the dark theme colors with Bootstrap's theme colors
+$theme-colors: map-merge($theme-colors, $dark-theme-colors);
+
+// // Apply other dark theme overrides (optional)
+// $body-bg: #000;
+// $body-color: #fff;
+
+// Import Bootstrap to apply your changes
+@import "bootstrap/scss/bootstrap";

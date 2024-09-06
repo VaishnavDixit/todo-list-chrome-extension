@@ -1,70 +1,104 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import url("https://fonts.googleapis.com/css2?family=Quicksand&display=swap");
 
-// .dark {
-//     background-color: #2a333a;
-//     h5 {
-//         color: #c9d4d6;
-//     }
-//     textarea {
-//         color: #c9d4d6;
-//     }
+// Define common variables
+$primary-color: #ffb0ff;
+$secondary-color: #41295a;
+$background-dark: linear-gradient(#41295a, #2f0743);
+$hover-bg-light: #55c4ff3e;
+$hover-bg-dark: #41295a;
+$font-small: 12px;
+$font-medium: 14px;
+$font-large: 16px;
+$scrollbar-width: 4px;
 
-//     Button {
-//     }
+.dark {
+    background: $background-dark;
 
-//     .fontSmall {
-//         color: #c9d4d6;
-//     }
-
-//     .taskRow {
-//         transition: 0.3s ease;
-//         width: 100%;
-//         margin: 0;
-
-//         .task {
-//             pre {
-//                 white-space: pre-wrap;
-//                 word-wrap: break-word;
-//                 font-size: 16px;
-//                 width: 100%;
-//             }
-//         }
-
-//         &:hover {
-//             background: #c1d3dd3e;
-//         }
-//     }
-
-//     .tasksListRow {
-//         max-height: 267px;
-//         width: 100%;
-//         overflow: auto;
-//     }
-// }
-.App {
-    font-family: "Quicksand", sans-serif;
-    h5 {
-        font-weight: 600;
+    h5,
+    .fontSmall,
+    .headerCol .modeIcon,
+    textarea,
+    .taskRow .task pre,
+    .taskRow .reorderIcon {
+        color: $primary-color !important;
     }
 
     textarea {
+        border: 1px solid $primary-color !important;
+        &::placeholder,
+        &:focus {
+            color: $primary-color;
+        }
+    }
+
+    .headerCol .modeIcon {
+        color: $primary-color !important;
+    }
+
+    .taskRow {
+        &:hover {
+            background: $hover-bg-dark !important;
+        }
+    }
+}
+
+* {
+    // outline: 1px solid lightgrey;
+}
+
+.App {
+    font-family: "Quicksand", sans-serif;
+    transition: background 0.2s ease;
+    h5 {
+        font-weight: 400;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .headerCol {
+        position: relative;
+
+        .modeIcon {
+            color: $secondary-color;
+            position: absolute;
+            width: 20px;
+            top: 4px;
+            right: 8px;
+        }
+    }
+
+    textarea {
+        font-size: $font-medium;
         background: transparent;
+        border-radius: 6px;
+        border: 1px solid lightgrey;
+        width: 100%;
         &:focus {
             background: transparent;
+            outline: none !important;
         }
     }
 
     Button {
-        height: 30px;
+        height: 25px;
+        font-size: $font-small;
         width: 100%;
     }
 
     .fontSmall {
-        font-size: 14px !important;
+        font-size: $font-small !important;
     }
+
     .fontSmaller {
-        font-size: 12px !important;
+        font-size: $font-medium !important;
+    }
+
+    .addBtn {
+        font-size: $font-small;
+        width: 15px;
     }
 
     .taskRow {
@@ -72,25 +106,28 @@
         width: 100%;
         margin: 0;
         cursor: grab;
+
         .reorderIcon {
             opacity: 0.1;
-            font-size: 14px;
+            font-size: $font-medium;
         }
-        .task {
-            pre {
-                white-space: pre-wrap;
-                word-wrap: break-word;
-                font-size: 16px;
-                width: 100%;
-            }
+
+        .task pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: $font-large;
+            width: 100%;
         }
 
         &:hover {
-            background: #55c4ff3e;
+            background: $hover-bg-light;
         }
     }
 
     .tasksListRow {
+        p {
+            opacity: 0.5;
+        }
         max-height: 267px;
         width: 100%;
         overflow: auto;
@@ -98,8 +135,9 @@
 }
 
 ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: $scrollbar-width;
+    height: $scrollbar-width;
+
     &-track {
         background: #f1f1f1;
     }
