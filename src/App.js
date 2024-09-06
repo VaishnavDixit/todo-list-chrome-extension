@@ -50,10 +50,9 @@ function App() {
     };
 
     return (
-        <div className={"App p-2 pe-0 pb-0 " + MODES[mode]} style={{width: "350px"}}>
+        <div className={`App p-2 pe-0 pb-0 ${MODES[mode]}`} style={{width: "350px"}}>
             <Row className="mb-1 d-flex justify-content-between px-2">
                 <Col xs={12} className="ps-1 headerCol">
-                    {/* </div> */}
                     <h5 className="text-center">My Todo List ✏️</h5>
                     <FontAwesomeIcon
                         className="pointer modeIcon"
@@ -111,8 +110,8 @@ const TaskItem = ({mode, task, onDelete}) => (
         value={task}
     >
         <div className="py-1 mx-0 ps-0 pe-0 d-flex justify-content-between taskRow">
-            <Col xs={10} className="ps-1 me-0 task d-flex align-items-center">
-                <FontAwesomeIcon icon={faGripVertical} className="reorderIcon me-1" />
+            <Col xs={10} className="ps-1 me-0 task d-flex align-items-start">
+                <FontAwesomeIcon icon={faGripVertical} className="reorderIcon me-1 mt-1" />
                 <pre
                     className={
                         "mb-0 " +

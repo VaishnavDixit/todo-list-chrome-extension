@@ -102,7 +102,7 @@ $scrollbar-width: 4px;
     }
 
     .taskRow {
-        transition: 0.3s ease;
+        // transition: 0.3s ease;
         width: 100%;
         margin: 0;
         cursor: grab;
@@ -113,6 +113,7 @@ $scrollbar-width: 4px;
         }
 
         .task pre {
+            font-family: "Quicksand", sans-serif;
             white-space: pre-wrap;
             word-wrap: break-word;
             font-size: $font-large;
