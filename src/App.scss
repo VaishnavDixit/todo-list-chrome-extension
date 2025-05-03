@@ -7,6 +7,9 @@ $secondary-color: #41295a;
 $background-dark: linear-gradient(#41295a, #2f0743);
 $hover-bg-light: #55c4ff3e;
 $hover-bg-dark: #41295a;
+$low-priority: #34C759;
+$med-priority: #FF9500;
+$hi-priority: #FF3B30;
 $font-small: 12px;
 $font-medium: 14px;
 $font-large: 16px;
@@ -87,6 +90,18 @@ $scrollbar-width: 4px;
         font-size: $font-small;
         width: 100%;
     }
+
+	.buttons-section{
+		.lowPriority{
+			color: $low-priority !important;
+		}
+		.medPriority{
+			color: $med-priority !important;
+		}
+		.highPriority{
+			color: $hi-priority !important;
+		}
+	}
 
     .fontSmall {
         font-size: $font-small !important;

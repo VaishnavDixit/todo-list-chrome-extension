@@ -1,12 +1,24 @@
 /*global chrome*/
 /*global local*/
 
-import {faCheck, faGripVertical, faMoon, faPlus, faSun} from "@fortawesome/free-solid-svg-icons";
+import {
+    faCheck,
+    faLeaf,
+    faLocationPin,
+    faClock,
+    faFireAlt,
+    faGripVertical,
+    faMoon,
+    faPlus,
+    faSun,
+    faExclamationTriangle,
+    faExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Reorder} from "framer-motion";
 import {useEffect, useState} from "react";
-import {Button, Col, Row} from "react-bootstrap";
+import {Button, Col, Dropdown, Row} from "react-bootstrap";
 import {v4 as uuidv4} from "uuid";
 import "./App.scss";
 import "./custom.scss";
@@ -15,10 +27,10 @@ function App() {
     const [tasks, setTasks] = useState([]);
     const [mode, setMode] = useState(0);
     useEffect(() => {
-        chrome.storage.sync.get(["tasks", "mode"], (res) => {
-            setTasks(res.tasks || []);
-            setMode(res.mode || 0);
-        });
+        // chrome.storage.sync.get(["tasks", "mode"], (res) => {
+        //     setTasks(res.tasks || []);
+        //     setMode(res.mode || 0);
+        // });
     }, []);
 
     const handleAddTask = () => {
@@ -30,27 +42,27 @@ function App() {
         const newTask = {task: value, uuid: uuidv4()};
         const updatedTasks = [newTask, ...tasks];
         setTasks(updatedTasks);
-        chrome.storage.sync.set({tasks: updatedTasks});
+        // chrome.storage.sync.set({tasks: updatedTasks});
     };
 
     const handleReorder = (newTasksList) => {
         setTasks(newTasksList);
-        chrome.storage.sync.set({tasks: newTasksList});
+        // chrome.storage.sync.set({tasks: newTasksList});
     };
 
     const handleDeleteTask = (uuid) => {
         const updatedTasks = tasks.filter((item) => item.uuid !== uuid);
         setTasks(updatedTasks);
-        chrome.storage.sync.set({tasks: updatedTasks});
+        // chrome.storage.sync.set({tasks: updatedTasks});
     };
 
     const handleClickTheme = () => {
         setMode((mode + 1) % 2);
-        chrome.storage.sync.set({mode: (mode + 1) % 2});
+        // chrome.storage.sync.set({mode: (mode + 1) % 2});
     };
 
     return (
-        <div className={`App p-2 pe-0 pb-0 ${MODES[mode]}`} style={{width: "350px"}}>
+        <div className={`App p-2 pe-0 pb-0 ${MODES[mode]}`} style={{width: 450}}>
             <Row className="mb-1 d-flex justify-content-between px-2">
                 <Col xs={12} className="ps-1 headerCol">
                     <h5 className="text-center">My Todo List ✏️</h5>
@@ -61,11 +73,57 @@ function App() {
                     />
                 </Col>
             </Row>
-            <Row className="pe-2 mb-1">
-                <Col xs={9} className="pe-0">
+            <Row className="pe-2 mb-1 buttons-section ">
+                <Col xs={12} am={12} className="pe-0">
                     <textarea type="text" className="p-2" placeholder="Start typing" />
                 </Col>
-                <Col xs={3} className="d-flex justify-content-end">
+                <Col
+                    sm={{
+                        span: 3,
+                        offset: 7,
+                    }}
+                    xs={{
+                        span: 3,
+                        offset: 7,
+                    }}
+                    className="p-0"
+                >
+                    <Dropdown size="sm">
+                        <Dropdown.Toggle
+                            className="p-0"
+                            variant={mode == 0 ? "outline-primary" : "dark-primary"}
+                            id="dropdown-basic"
+                        >
+                            Priority
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item className="py-0 fontSmall lowPriority" key={1}>
+                                <FontAwesomeIcon className="pointer Icon" icon={faLeaf} /> Low
+                            </Dropdown.Item>
+                            <Dropdown.Item className="py-0 fontSmall medPriority" key={2}>
+                                <FontAwesomeIcon className="pointer Icon" icon={faClock} /> Medium
+                            </Dropdown.Item>
+                            <Dropdown.Item className="py-0 fontSmall highPriority" key={3}>
+                                <FontAwesomeIcon
+                                    className="pointer Icon mx-1"
+                                    icon={faExclamation}
+                                />{" "}
+                                High
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Col>
+                <Col
+                    sm={{
+                        span: 2,
+                    }}
+                    xs={{
+                        span: 2,
+                    }}
+                    className="pe-0"
+                    // className="d-flex justify-content-end flex-row"
+                >
                     <Button
                         variant={mode == 0 ? "primary" : "dark-primary"}
                         size="sm"
@@ -78,8 +136,8 @@ function App() {
                 </Col>
             </Row>
             <Row className="tasksListRow mx-0">
-                <Reorder.Group className="ps-0" axis="y" values={tasks} onReorder={handleReorder}>
-                    {tasks.length ? (
+                {/* <Reorder.Group className="ps-0" axis="y" values={tasks} onReorder={handleReorder}>
+                    {/* {tasks.length ? (
                         tasks.map((task) => (
                             <TaskItem
                                 mode={mode}
@@ -90,8 +148,21 @@ function App() {
                         ))
                     ) : (
                         <p className="text-center fontSmall mt-1 mb-0">Write your tasks above</p>
-                    )}
-                </Reorder.Group>
+                    )} */}
+                {/* </Reorder.Group> */}
+                {tasks.length ? (
+                    tasks.map((task) => (
+                        // <TaskItem
+                        //     mode={mode}
+                        //     key={task.uuid}
+                        //     task={task}
+                        //     onDelete={handleDeleteTask}
+                        // />
+                        <span>{task.task}</span>
+                    ))
+                ) : (
+                    <span className="text-center fontSmall mt-1 mb-0">Write your tasks above</span>
+                )}
             </Row>
         </div>
     );
