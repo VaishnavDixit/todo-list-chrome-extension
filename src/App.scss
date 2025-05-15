@@ -7,9 +7,11 @@ $secondary-color: #41295a;
 $background-dark: linear-gradient(#41295a, #2f0743);
 $hover-bg-light: #55c4ff3e;
 $hover-bg-dark: #41295a;
+$select-green: #158631;
 $low-priority: #34C759;
 $med-priority: #FF9500;
 $hi-priority: #FF3B30;
+$font-extrasmall: 4px;
 $font-small: 12px;
 $font-medium: 14px;
 $font-large: 16px;
@@ -101,6 +103,12 @@ $scrollbar-width: 4px;
 		.highPriority{
 			color: $hi-priority !important;
 		}
+		.dropdown-item:active{
+			background-color: transparent !important;
+		}
+		.dropdown-toggle{
+			border-radius: 4px;	
+		}
 	}
 
     .fontSmall {
@@ -120,11 +128,10 @@ $scrollbar-width: 4px;
         // transition: 0.3s ease;
         width: 100%;
         margin: 0;
-        cursor: grab;
 
-        .reorderIcon {
+        .bulletIcon {
             opacity: 0.1;
-            font-size: $font-medium;
+            font-size: $font-extrasmall;
         }
 
         .task pre {
@@ -134,10 +141,10 @@ $scrollbar-width: 4px;
             font-size: $font-large;
             width: 100%;
         }
-
-        &:hover {
-            background: $hover-bg-light;
-        }
+		.checkIcon{
+			font-size: $font-medium;
+			color: $select-green;
+		}
     }
 
     .tasksListRow {
