@@ -2,33 +2,27 @@
 /*global local*/
 
 import {
-    faCheck,
-    faLeaf,
-    faLocationPin,
-    faClock,
-    faFireAlt,
-    faGripVertical,
-    faMoon,
-    faPlus,
-    faSun,
-    faExclamationTriangle,
-    faExclamation,
-    faCircle,
-    faCheckCircle,
+	faCheck,
+	faClock,
+	faExclamation,
+	faLeaf,
+	faMoon,
+	faPlus,
+	faSun
 } from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons/faList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Reorder, motion} from "framer-motion";
-import {useEffect, useState} from "react";
-import {Button, Col, Dropdown, Row} from "react-bootstrap";
-import {v4 as uuidv4} from "uuid";
+import { useEffect, useState } from "react";
+import { Button, Col, Dropdown, Row } from "react-bootstrap";
+import { v4 as uuidv4 } from "uuid";
 import "./App.scss";
 import "./custom.scss";
 const MODES = ["light", "dark"];
 function App() {
     const [tasks, setTasks] = useState([]);
     const [curPriority, setCurPriority] = useState(0);
-    const [filterPriority, setFilterPriority] = useState(0);
+    const [filterPriority, setFilterPriority] = useState(-1); // -1: all, 0: lo, 1: med, 2: hi
     const [mode, setMode] = useState(0);
     useEffect(() => {
         // chrome.storage.sync.get(["tasks", "mode"], (res) => {
@@ -73,8 +67,12 @@ function App() {
         // chrome.storage.sync.set({mode: (mode + 1) % 2});
     };
 
+    const onClickFilterBtn = (filterVal) => {
+        setFilterPriority(filterVal);
+    };
+
     return (
-        <div className={`App p-2 pe-0 pb-0 ${MODES[mode]}`} style={{width: 500}}>
+        <div className={`App p-2 pe-0 pb-0 ${MODES[mode]}`} style={{width: 450}}>
             <Row className="mb-1 d-flex justify-content-between px-2">
                 <Col xs={12} className="ps-1 headerCol">
                     <h5 className="text-center">My Todo List ✏️</h5>
@@ -94,44 +92,61 @@ function App() {
                         span: 6,
                         offset: 0,
                     }}
-                    className="pe-1 ps-3 d-flex align-items-center"
+                    className="pe-1 ps-3 d-flex align-items-start"
                 >
                     <span className="fontSmall me-1">Filter by:</span>
                     <Button
                         variant="link"
-                        style={{background: "#34C75915", width: 25}}
+                        style={{
+                            border: filterPriority == 0 ? "2px solid #34C759BB" : "",
+                            background: "#34C75915",
+                            width: 25,
+                        }}
                         size="sm"
                         className="p-0 ms-0"
-                        onClick={handleAddTask}
+                        onClick={() => onClickFilterBtn(0)}
                     >
                         <FontAwesomeIcon icon={faLeaf} style={{color: "#34C759"}} />
                     </Button>
                     <Button
                         variant="link"
-                        style={{background: "#FF950015", width: 25}}
+                        style={{
+                            border: filterPriority == 1 ? "2px solid #FF9500BB" : "",
+                            background: "#FF950015",
+                            width: 25,
+                        }}
                         size="sm"
                         className="p-0 ms-1"
-                        onClick={handleAddTask}
+                        onClick={() => onClickFilterBtn(1)}
                     >
                         <FontAwesomeIcon icon={faClock} style={{color: "#FF9500"}} />
                     </Button>
                     <Button
                         variant="link"
-                        style={{background: "#FF3B3015", width: 25}}
+                        style={{
+                            border: filterPriority == 2 ? "2px solid #FF3B30BB" : "",
+                            background: "#FF3B3015",
+                            width: 25,
+                        }}
                         size="sm"
                         className="p-0 ms-1"
-                        onClick={handleAddTask}
+                        onClick={() => onClickFilterBtn(2)}
                     >
                         <FontAwesomeIcon icon={faExclamation} style={{color: "#FF3B30"}} />
                     </Button>
                     <Button
                         variant="link"
-                        style={{width: 55, color: "black"}}
+                        style={{
+                            border: filterPriority == -1 ? "2px solid #0B5ED7BB" : "",
+                            background: "#0B5ED715",
+                            width: 25,
+                            color: "black",
+                        }}
                         size="sm"
-                        className="p-0 ms-0 fontSmall"
-                        onClick={handleAddTask}
+                        className="p-0 ms-1 fontSmall"
+                        onClick={() => onClickFilterBtn(-1)}
                     >
-                       show all
+                        <FontAwesomeIcon icon={faList} style={{color: "#0B5ED7"}} />
                     </Button>
                 </Col>
                 <Col
@@ -239,8 +254,8 @@ function App() {
 
 const TaskItem = ({mode: theme, task, onDelete}) => (
     <div className="py-1 mx-0 ps-0 pe-0 d-flex justify-content-between taskRow">
-        <Col xs={8} className="ps-1 me-0 task d-flex align-items-start">
-            <FontAwesomeIcon icon={faCircle} className="bulletIcon me-1 mt-2" />
+        <Col xs={8} className="ps-1 me-0 task d-flex align-items-start border-bottom">
+            {/* <FontAwesomeIcon icon={faCircle} className="bulletIcon me-1 mt-2" /> */}
             <pre
                 className={
                     "mb-0 " +
@@ -257,7 +272,7 @@ const TaskItem = ({mode: theme, task, onDelete}) => (
         <Col sm={3} className="d-flex justify-content-end">
             <Button
                 variant="link"
-                style={{background: "#34C75915", width: 25}}
+                style={{border: task.priority == 0 ? "2px dashed #34C75980" : "", width: 25}}
                 size="sm"
                 className="p-0 ms-1"
             >
@@ -265,7 +280,7 @@ const TaskItem = ({mode: theme, task, onDelete}) => (
             </Button>
             <Button
                 variant="link"
-                style={{background: "#FF950015", width: 25}}
+                style={{border: task.priority == 1 ? "2px dashed #FF950080" : "", width: 25}}
                 size="sm"
                 className="p-0 ms-1"
             >
@@ -273,15 +288,21 @@ const TaskItem = ({mode: theme, task, onDelete}) => (
             </Button>
             <Button
                 variant="link"
-                style={{background: "#FF3B3015", width: 25}}
+                style={{border: task.priority == 2 ? "2px dashed #FF3B3080" : "", width: 25}}
                 size="sm"
                 className="p-0 ms-1"
             >
                 <FontAwesomeIcon icon={faExclamation} style={{color: "#FF3B30"}} />
             </Button>
         </Col>
-        <Col xs={1} className="d-flex align-items-center justify-content-end pe-2">
-            <FontAwesomeIcon icon={faCheck} className="checkIcon" />
+        <Col xs={1} className="d-flex align-items-start justify-content-end pe-2">
+            <Button
+                variant="link"
+                size="sm"
+                className="p-0 ms-1"
+            >
+                <FontAwesomeIcon icon={faCheck} className="checkIcon" />
+            </Button>
         </Col>
     </div>
 );
