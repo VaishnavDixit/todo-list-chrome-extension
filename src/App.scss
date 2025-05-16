@@ -8,9 +8,9 @@ $background-dark: linear-gradient(#41295a, #2f0743);
 $hover-bg-light: #55c4ff3e;
 $hover-bg-dark: #41295a;
 $select-green: #158631;
-$low-priority: #34C759;
-$med-priority: #FF9500;
-$hi-priority: #FF3B30;
+$low-priority: #34c759;
+$med-priority: #ff9500;
+$hi-priority: #ff3b30;
 $font-extrasmall: 4px;
 $font-small: 12px;
 $font-medium: 14px;
@@ -58,7 +58,9 @@ $scrollbar-width: 4px;
     h5 {
         font-weight: 400;
     }
-
+    .border-bottom {
+        border-bottom: 1px solid #85858586 !important;
+    }
     .pointer {
         cursor: pointer;
     }
@@ -93,23 +95,23 @@ $scrollbar-width: 4px;
         width: 100%;
     }
 
-	.buttons-section{
-		.lowPriority{
-			color: $low-priority !important;
-		}
-		.medPriority{
-			color: $med-priority !important;
-		}
-		.highPriority{
-			color: $hi-priority !important;
-		}
-		.dropdown-item:active{
-			background-color: transparent !important;
-		}
-		.dropdown-toggle{
-			border-radius: 4px;	
-		}
-	}
+    .buttons-section {
+        .lowPriority {
+            color: $low-priority !important;
+        }
+        .medPriority {
+            color: $med-priority !important;
+        }
+        .highPriority {
+            color: $hi-priority !important;
+        }
+        .dropdown-item:active {
+            background-color: transparent !important;
+        }
+        .dropdown-toggle {
+            border-radius: 4px;
+        }
+    }
 
     .fontSmall {
         font-size: $font-small !important;
@@ -128,7 +130,7 @@ $scrollbar-width: 4px;
         // transition: 0.3s ease;
         width: 100%;
         margin: 0;
-
+		border-radius: 4px;
         .bulletIcon {
             opacity: 0.1;
             font-size: $font-extrasmall;
@@ -141,10 +143,10 @@ $scrollbar-width: 4px;
             font-size: $font-large;
             width: 100%;
         }
-		.checkIcon{
-			font-size: $font-medium;
-			color: $select-green;
-		}
+        .checkIcon {
+            font-size: $font-medium;
+            color: $select-green;
+        }
     }
 
     .tasksListRow {

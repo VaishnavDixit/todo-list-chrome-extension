@@ -8,7 +8,7 @@ import {
 	faLeaf,
 	faMoon,
 	faPlus,
-	faSun
+	faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import { faList } from "@fortawesome/free-solid-svg-icons/faList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -40,6 +40,7 @@ function App() {
         const newTask = {task: value, uuid: uuidv4(), priority: curPriority};
         const updatedTasks = [newTask, ...tasks];
         setTasks(updatedTasks);
+        setFilterPriority(curPriority);
         setCurPriority(0);
         // chrome.storage.sync.set({tasks: updatedTasks});
     };
@@ -60,6 +61,17 @@ function App() {
         const updatedTasks = tasks.filter((item) => item.uuid !== uuid);
         setTasks(updatedTasks);
         // chrome.storage.sync.set({tasks: updatedTasks});
+    };
+
+    const updateTaskPriority = (uuid, newPriority) => {
+        const updatedTasks = tasks.map((task) => {
+            if (task.uuid === uuid) {
+                return {...task, priority: newPriority};
+            }
+            return task;
+        });
+        setTasks(updatedTasks);
+        // chrome.storage.sync.set({ tasks: updatedTasks });
     };
 
     const handleClickTheme = () => {
@@ -84,11 +96,11 @@ function App() {
                 </Col>
             </Row>
             <Row className="pe-2 mb-1 buttons-section ">
-                <Col xs={12} sm={12}>
+                <Col xs={12}>
                     <textarea type="text" className="p-2" placeholder="Start typing" />
                 </Col>
                 <Col
-                    sm={{
+                    xs={{
                         span: 6,
                         offset: 0,
                     }}
@@ -150,7 +162,7 @@ function App() {
                     </Button>
                 </Col>
                 <Col
-                    sm={{
+                    xs={{
                         span: 3,
                         offset: 1,
                     }}
@@ -184,7 +196,6 @@ function App() {
                                         : curPriority == 1
                                         ? "#FF9500"
                                         : "#FF3B30",
-                                // color: curPriority == 0 ? "black" : curPriority == 0 ? "black" : "white"
                             }}
                         >
                             {curPriority == 0 ? (
@@ -226,7 +237,7 @@ function App() {
                     </Dropdown>
                 </Col>
                 <Col
-                    sm={{
+                    xs={{
                         span: 2,
                     }}
                 >
@@ -243,19 +254,28 @@ function App() {
             </Row>
             <Row className="tasksListRow mx-0">
                 {tasks.length ? (
-                    tasks.map((task) => <TaskItem mode={mode} task={task} onDelete={onDelete} />)
+                    tasks
+                        .filter((task) => filterPriority === -1 || (task.priority ?? 0) == filterPriority)
+                        .map((task) => (
+                            <TaskItem
+                                key={task.uuid}
+                                mode={mode}
+                                task={task}
+                                onDelete={onDelete}
+                                updateTaskPriority={updateTaskPriority}
+                            />
+                        ))
                 ) : (
-                    <span className="text-center fontSmall mt-1 mb-0">Write your tasks above</span>
+                    <span className="text-center fontSmall mt-1 mb-0 py-3">Write your tasks above</span>
                 )}
             </Row>
         </div>
     );
 }
 
-const TaskItem = ({mode: theme, task, onDelete}) => (
-    <div className="py-1 mx-0 ps-0 pe-0 d-flex justify-content-between taskRow">
+const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority}) => (
+    <div className="my-1 mx-0 ps-0 pe-0 d-flex justify-content-between taskRow">
         <Col xs={8} className="ps-1 me-0 task d-flex align-items-start border-bottom">
-            {/* <FontAwesomeIcon icon={faCircle} className="bulletIcon me-1 mt-2" /> */}
             <pre
                 className={
                     "mb-0 " +
@@ -269,39 +289,41 @@ const TaskItem = ({mode: theme, task, onDelete}) => (
                 {task.task}
             </pre>
         </Col>
-        <Col sm={3} className="d-flex justify-content-end">
+        <Col xs={3} className="d-flex justify-content-end">
             <Button
                 variant="link"
-                style={{border: task.priority == 0 ? "2px dashed #34C75980" : "", width: 25}}
+                style={{outline: (task.priority ?? 0) == 0 ? "2px solid #34C75980" : "", width: 60}}
                 size="sm"
-                className="p-0 ms-1"
+                className="p-0 "
+                onClick={() => updateTaskPriority(task.uuid, 0)}
             >
                 <FontAwesomeIcon icon={faLeaf} style={{color: "#34C759"}} />
             </Button>
             <Button
                 variant="link"
-                style={{border: task.priority == 1 ? "2px dashed #FF950080" : "", width: 25}}
+                style={{outline: (task.priority ?? 0) == 1 ? "2px solid #FF950080" : "", width: 60}}
                 size="sm"
-                className="p-0 ms-1"
+                className="p-0 "
+                onClick={() => updateTaskPriority(task.uuid, 1)}
             >
                 <FontAwesomeIcon icon={faClock} style={{color: "#FF9500"}} />
             </Button>
             <Button
                 variant="link"
-                style={{border: task.priority == 2 ? "2px dashed #FF3B3080" : "", width: 25}}
+                style={{outline: (task.priority ?? 0) == 2 ? "2px solid #FF3B3080" : "", width: 60}}
                 size="sm"
-                className="p-0 ms-1"
+                className="p-0 "
+                onClick={() => updateTaskPriority(task.uuid, 2)}
             >
                 <FontAwesomeIcon icon={faExclamation} style={{color: "#FF3B30"}} />
             </Button>
-        </Col>
-        <Col xs={1} className="d-flex align-items-start justify-content-end pe-2">
             <Button
                 variant="link"
                 size="sm"
                 className="p-0 ms-1"
+                onClick={() => onDelete(task.uuid)}
             >
-                <FontAwesomeIcon icon={faCheck} className="checkIcon" />
+                <FontAwesomeIcon icon={faCheck} style={{color: "#1baa3f"}} />
             </Button>
         </Col>
     </div>
