@@ -2,20 +2,20 @@
 /*global local*/
 
 import {
-	faCheck,
-	faClock,
-	faExclamation,
-	faLeaf,
-	faMoon,
-	faPlus,
-	faSun,
+    faCheck,
+    faClock,
+    faExclamationCircle,
+    faLeaf,
+    faMoon,
+    faPlus,
+    faSun,
 } from "@fortawesome/free-solid-svg-icons";
-import { faList } from "@fortawesome/free-solid-svg-icons/faList";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faList} from "@fortawesome/free-solid-svg-icons/faList";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect, useState } from "react";
-import { Button, Col, Dropdown, Row } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid";
+import {useEffect, useState} from "react";
+import {Button, Col, Dropdown, Row} from "react-bootstrap";
+import {v4 as uuidv4} from "uuid";
 import "./App.scss";
 import "./custom.scss";
 const MODES = ["light", "dark"];
@@ -25,10 +25,10 @@ function App() {
     const [filterPriority, setFilterPriority] = useState(-1); // -1: all, 0: lo, 1: med, 2: hi
     const [mode, setMode] = useState(0);
     useEffect(() => {
-        // chrome.storage.sync.get(["tasks", "mode"], (res) => {
-        //     setTasks(res.tasks || []);
-        //     setMode(res.mode || 0);
-        // });
+        chrome.storage.sync.get(["tasks", "mode"], (res) => {
+            setTasks(res.tasks || []);
+            setMode(res.mode || 0);
+        });
     }, []);
 
     const handleAddTask = () => {
@@ -40,17 +40,10 @@ function App() {
         const newTask = {task: value, uuid: uuidv4(), priority: curPriority};
         const updatedTasks = [newTask, ...tasks];
         setTasks(updatedTasks);
-        setFilterPriority(curPriority);
-        setCurPriority(0);
-        // chrome.storage.sync.set({tasks: updatedTasks});
+        setFilterPriority(-1);
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
 
-    const tabs = [
-        {id: "low", label: "low"},
-        {id: "med", label: "med"},
-        {id: "high", label: "high"},
-    ];
-    let [activeTab, setActiveTab] = useState(tabs[0].id);
 
     // const handleReorder = (newTasksList) => {
     //     setTasks(newTasksList);
@@ -60,7 +53,7 @@ function App() {
     const onDelete = (uuid) => {
         const updatedTasks = tasks.filter((item) => item.uuid !== uuid);
         setTasks(updatedTasks);
-        // chrome.storage.sync.set({tasks: updatedTasks});
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
 
     const updateTaskPriority = (uuid, newPriority) => {
@@ -71,12 +64,12 @@ function App() {
             return task;
         });
         setTasks(updatedTasks);
-        // chrome.storage.sync.set({ tasks: updatedTasks });
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
 
     const handleClickTheme = () => {
         setMode((mode + 1) % 2);
-        // chrome.storage.sync.set({mode: (mode + 1) % 2});
+        chrome.storage.sync.set({mode: (mode + 1) % 2});
     };
 
     const onClickFilterBtn = (filterVal) => {
@@ -106,7 +99,7 @@ function App() {
                     }}
                     className="pe-1 ps-3 d-flex align-items-start"
                 >
-                    <span className="fontSmall me-1">Filter by:</span>
+                    <span className="me-1 fontSmall filterText">Filter by:</span>
                     <Button
                         variant="link"
                         style={{
@@ -144,7 +137,7 @@ function App() {
                         className="p-0 ms-1"
                         onClick={() => onClickFilterBtn(2)}
                     >
-                        <FontAwesomeIcon icon={faExclamation} style={{color: "#FF3B30"}} />
+                        <FontAwesomeIcon icon={faExclamationCircle} style={{color: "#FF3B30"}} />
                     </Button>
                     <Button
                         variant="link"
@@ -166,10 +159,6 @@ function App() {
                         span: 3,
                         offset: 1,
                     }}
-                    // xs={{
-                    //     span: 3,
-                    //     offset: 6,
-                    // }}
                     className="p-0"
                 >
                     <Dropdown size="sm" onSelect={(priority) => setCurPriority(priority)}>
@@ -211,9 +200,9 @@ function App() {
                             ) : (
                                 <>
                                     <FontAwesomeIcon
-                                        className="pointer Icon mx-1"
-                                        icon={faExclamation}
-                                    />
+                                        className="pointer Icon"
+                                        icon={faExclamationCircle}
+                                    />{" "}
                                     <b>High priority</b>
                                 </>
                             )}
@@ -228,8 +217,8 @@ function App() {
                             </Dropdown.Item>
                             <Dropdown.Item className="py-0 fontSmall highPriority" eventKey={2}>
                                 <FontAwesomeIcon
-                                    className="pointer Icon mx-1"
-                                    icon={faExclamation}
+                                    className="pointer Icon"
+                                    icon={faExclamationCircle}
                                 />{" "}
                                 High
                             </Dropdown.Item>
@@ -252,10 +241,13 @@ function App() {
                     </Button>
                 </Col>
             </Row>
-            <Row className="tasksListRow mx-0">
+            <Row className="tasksListRow mx-0 pb-4">
                 {tasks.length ? (
                     tasks
-                        .filter((task) => filterPriority === -1 || (task.priority ?? 0) == filterPriority)
+                        .filter(
+                            (task) =>
+                                filterPriority === -1 || (task.priority ?? 0) == filterPriority
+                        )
                         .map((task) => (
                             <TaskItem
                                 key={task.uuid}
@@ -266,7 +258,9 @@ function App() {
                             />
                         ))
                 ) : (
-                    <span className="text-center fontSmall mt-1 mb-0 py-3">Write your tasks above</span>
+                    <span className="text-center fontSmall mt-1 mb-0 pt-4">
+                        Write your tasks above
+                    </span>
                 )}
             </Row>
         </div>
@@ -292,7 +286,10 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority}) => (
         <Col xs={3} className="d-flex justify-content-end">
             <Button
                 variant="link"
-                style={{outline: (task.priority ?? 0) == 0 ? "2px solid #34C75980" : "", width: 60}}
+                style={{
+                    outline: (task.priority ?? 0) == 0 ? "2px solid #34C75980" : "",
+                    width: 60,
+                }}
                 size="sm"
                 className="p-0 "
                 onClick={() => updateTaskPriority(task.uuid, 0)}
@@ -312,10 +309,10 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority}) => (
                 variant="link"
                 style={{outline: (task.priority ?? 0) == 2 ? "2px solid #FF3B3080" : "", width: 60}}
                 size="sm"
-                className="p-0 "
+                className="p-0"
                 onClick={() => updateTaskPriority(task.uuid, 2)}
             >
-                <FontAwesomeIcon icon={faExclamation} style={{color: "#FF3B30"}} />
+                <FontAwesomeIcon icon={faExclamationCircle} style={{color: "#FF3B30"}} />
             </Button>
             <Button
                 variant="link"

@@ -96,6 +96,9 @@ $scrollbar-width: 4px;
     }
 
     .buttons-section {
+		.filterText{
+			font-size: 14px !important;
+		}
         .lowPriority {
             color: $low-priority !important;
         }
