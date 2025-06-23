@@ -1,27 +1,24 @@
 /*global chrome*/
 /*global local*/
 
+import { faSquare, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import {
-    faCheck,
-    faCheckSquare,
-    // faCircle,
-    faClock,
-    faDeleteLeft,
-    faExclamationCircle,
-    faLeaf,
-    faMoon,
-    faPlus,
-    // faSquare,
-    faSun,
-    faTrashRestore,
+	faCheckSquare,
+	// faCircle,
+	faClock,
+	faExclamationCircle,
+	faLeaf,
+	faMoon,
+	faPlus,
+	// faSquare,
+	faSun
 } from "@fortawesome/free-solid-svg-icons";
-import {faSquare, faTrashAlt} from "@fortawesome/free-regular-svg-icons";
-import {faList} from "@fortawesome/free-solid-svg-icons/faList";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons/faList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {useEffect, useState} from "react";
-import {Button, Col, Dropdown, FormCheck, Row} from "react-bootstrap";
-import {v4 as uuidv4} from "uuid";
+import { useEffect, useState } from "react";
+import { Button, Col, Dropdown, Row } from "react-bootstrap";
+import { v4 as uuidv4 } from "uuid";
 import "./App.scss";
 import "./custom.scss";
 // import { faSquareCaretDown } from "@fortawesome/free-solid-svg-icons/faSquareCaretDown";
@@ -286,10 +283,10 @@ function App() {
 
 const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDone}) => {
     const toggleDone = () => {
-        updateTaskDone(task.uuid, !task.isCompleted);
+        updateTaskDone(task.uuid, !task?.isCompleted);
     };
 
-    const displayedText = task.isCompleted
+    const displayedText = task?.isCompleted
         ? task.task.substring(0, 30) + (task.task.length > 30 ? "..." : "")
         : task.task;
 
@@ -297,7 +294,7 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
         <div className="my-1 mx-0 ps-0 pe-0 py-1 d-flex justify-content-between taskRow">
             <Col xs={8} className="ps-1 me-0 task d-flex align-items-start border-bottom">
                 <FontAwesomeIcon
-                    icon={task.isCompleted ? faCheckSquare : faSquare}
+                    icon={task?.isCompleted ? faCheckSquare : faSquare}
                     className="mt-1 mb-1 me-2 pointer"
                     style={{color: theme === 0 ? "#006c1a" : "#FFB0FF"}}
                     onClick={toggleDone}
@@ -312,8 +309,8 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
                             : " fontSmaller")
                     }
                     style={{
-                        textDecoration: task.isCompleted ? "line-through" : "none",
-                        color: task.isCompleted ? "#777" : "inherit",
+                        textDecoration: task?.isCompleted ? "line-through" : "none",
+                        color: task?.isCompleted ? "#777" : "inherit",
                         whiteSpace: "pre-wrap",
                         wordBreak: "break-word",
                     }}
@@ -327,7 +324,7 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
                     style={{
                         outline:
                             (task.priority ?? 0) === 0
-                                ? task.isCompleted
+                                ? task?.isCompleted
                                     ? "2px solid #A0A0A080"
                                     : "2px solid #34C75980"
                                 : "",
@@ -340,7 +337,7 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
                     <FontAwesomeIcon
                         icon={faLeaf}
                         style={{
-                            color: task.isCompleted ? "#A0A0A0" : "#34C759",
+                            color: task?.isCompleted ? "#A0A0A0" : "#34C759",
                         }}
                     />
                 </Button>
@@ -350,7 +347,7 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
                     style={{
                         outline:
                             (task.priority ?? 0) === 1
-                                ? task.isCompleted
+                                ? task?.isCompleted
                                     ? "2px solid #A0A0A080"
                                     : "2px solid #FF950080"
                                 : "",
@@ -363,7 +360,7 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
                     <FontAwesomeIcon
                         icon={faClock}
                         style={{
-                            color: task.isCompleted ? "#A0A0A0" : "#FF9500",
+                            color: task?.isCompleted ? "#A0A0A0" : "#FF9500",
                         }}
                     />
                 </Button>
@@ -373,7 +370,7 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
                     style={{
                         outline:
                             (task.priority ?? 0) === 2
-                                ? task.isCompleted
+                                ? task?.isCompleted
                                     ? "2px solid #A0A0A080"
                                     : "2px solid #FF3B3080"
                                 : "",
@@ -386,7 +383,7 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
                     <FontAwesomeIcon
                         icon={faExclamationCircle}
                         style={{
-                            color: task.isCompleted ? "#A0A0A0" : "#FF3B30",
+                            color: task?.isCompleted ? "#A0A0A0" : "#FF3B30",
                         }}
                     />
                 </Button>
