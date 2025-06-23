@@ -77,6 +77,17 @@ $scrollbar-width: 4px;
         }
     }
 
+	.strike{
+		text-decoration: line-through;
+	}
+
+	.trash-can{
+		transition: all .4s ease-in-out;
+		&:hover{
+			background-color: #80060016;
+		}
+	}
+	
     textarea {
         font-size: $font-medium;
         background: transparent;
