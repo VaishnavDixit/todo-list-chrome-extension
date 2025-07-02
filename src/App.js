@@ -1,27 +1,24 @@
 /*global chrome*/
 /*global local*/
 
-import { faSquare, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
+import {faSquare, faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import {
-	faCheckSquare,
-	// faCircle,
-	faClock,
-	faExclamationCircle,
-	faLeaf,
-	faMoon,
-	faPlus,
-	// faSquare,
-	faSun
+    faCheckSquare,
+    faClock,
+    faExclamationCircle,
+    faLeaf,
+    faMoon,
+    faPlus,
+    faSun,
 } from "@fortawesome/free-solid-svg-icons";
-import { faList } from "@fortawesome/free-solid-svg-icons/faList";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faList} from "@fortawesome/free-solid-svg-icons/faList";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect, useState } from "react";
-import { Button, Col, Dropdown, Row } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid";
+import {useEffect, useState} from "react";
+import {Button, Col, Dropdown, Row} from "react-bootstrap";
+import {v4 as uuidv4} from "uuid";
 import "./App.scss";
 import "./custom.scss";
-// import { faSquareCaretDown } from "@fortawesome/free-solid-svg-icons/faSquareCaretDown";
 const MODES = ["light", "dark"];
 function App() {
     const [tasks, setTasks] = useState([]);
@@ -29,10 +26,10 @@ function App() {
     const [filterPriority, setFilterPriority] = useState(-1); // -1: all, 0: lo, 1: med, 2: hi
     const [mode, setMode] = useState(0);
     useEffect(() => {
-        // chrome.storage.sync.get(["tasks", "mode"], (res) => {
-        //     setTasks(res.tasks || []);
-        //     setMode(res.mode || 0);
-        // });
+        chrome.storage.sync.get(["tasks", "mode"], (res) => {
+            setTasks(res.tasks || []);
+            setMode(res.mode || 0);
+        });
     }, []);
 
     const handleAddTask = () => {
@@ -45,18 +42,13 @@ function App() {
         const updatedTasks = [newTask, ...tasks];
         setTasks(updatedTasks);
         setFilterPriority(-1);
-        // chrome.storage.sync.set({tasks: updatedTasks});
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
-
-    // const handleReorder = (newTasksList) => {
-    //     setTasks(newTasksList);
-    //     // chrome.storage.sync.set({tasks: newTasksList});
-    // };
 
     const onDelete = (uuid) => {
         const updatedTasks = tasks.filter((item) => item.uuid !== uuid);
         setTasks(updatedTasks);
-        // chrome.storage.sync.set({tasks: updatedTasks});
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
 
     const updateTaskPriority = (uuid, newPriority) => {
@@ -67,8 +59,9 @@ function App() {
             return task;
         });
         setTasks(updatedTasks);
-        // chrome.storage.sync.set({tasks: updatedTasks});
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
+
     const updateTaskDone = (uuid, isDone) => {
         const updatedTasks = tasks.map((task) => {
             if (task.uuid === uuid) {
@@ -77,12 +70,12 @@ function App() {
             return task;
         });
         setTasks(updatedTasks);
-        // chrome.storage.sync.set({tasks: updatedTasks});
+        chrome.storage.sync.set({tasks: updatedTasks});
     };
 
     const handleClickTheme = () => {
         setMode((mode + 1) % 2);
-        // chrome.storage.sync.set({mode: (mode + 1) % 2});
+        chrome.storage.sync.set({mode: (mode + 1) % 2});
     };
 
     const onClickFilterBtn = (filterVal) => {
@@ -174,7 +167,7 @@ function App() {
                     }}
                     className="p-0"
                 >
-                    <Dropdown size="sm" onSelect={(priority) => setCurPriority(priority)}>
+                    <Dropdown size="sm" onSelect={(priority) => setCurPriority(Number(priority))}>
                         <Dropdown.Toggle
                             className="p-0 ms-1 dropdown-toggle"
                             variant={mode == 0 ? "outline-primary" : "dark-primary"}
@@ -393,12 +386,14 @@ const TaskItem = ({mode: theme, task, onDelete, updateTaskPriority, updateTaskDo
                     size="sm"
                     className="p-0 ms-0 trash-can"
                     style={{
-                        // backgroundColor:"#5a1a1a22",
                         width: 60,
                     }}
                     onClick={() => onDelete(task.uuid)}
                 >
-                    <FontAwesomeIcon icon={faTrashAlt} style={{color: "#800600", width: 15}} />
+                    <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        style={{color: theme === 0 ? "#800600" : "#FFB0FF", width: 15}}
+                    />
                 </Button>
             </Col>
         </div>
